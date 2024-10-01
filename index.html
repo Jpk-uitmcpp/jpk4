@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadual Bertugas Staff Residen Kolej</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/icon_jpk.png"> <!-- Favicon Link -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .schedule-container {
+            max-width: 1250px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column; /* Changed to column layout */
+            align-items: center; /* Center content horizontally */
+            gap: 20px;
+        }
+
+        .schedule-header {
+            background-color: #782982;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative; /* This allows the home button to be positioned relative to the header */
+        }
+
+        .schedule-image img {
+            width: 100%;
+            max-width: 600px; /* Increased max-width */
+            height: auto; /* Adjusted height */
+            object-fit: cover; /* Make sure the image scales nicely */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer; /* Add cursor pointer to indicate the image is clickable */
+        }
+
+        .schedule-table {
+            width: 100%; /* Adjusted width to fit within container */
+            border-collapse: collapse;
+        }
+
+        .schedule-table th, .schedule-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .schedule-table th {
+            background-color: #782982;
+            color: #fff;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #ddd;
+        }
+
+        .schedule-footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f4f4f4;
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-note {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media screen and (max-width: 600px) {
+            .schedule-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schedule-table, .schedule-table th, .schedule-table td {
+                font-size: 14px;
+            }
+
+            .schedule-image img {
+                max-width: 100%; /* Restrict the image width on smaller screens */
+            }
+        }
+
+        .home-button {
+            position: absolute; /* Fixes the button in the viewport */
+            top: 10px;
+            left: 10px;
+            background-color: #782982;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+            z-index: 1000; /* Ensures the button is on top of other content */
+        }
+
+        .home-button:hover {
+            background-color: #5a1f63;
+        }
+
+        /* Styles for date, time, and day */
+        .datetime-container {
+            text-align: right;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+        #currentDate, #currentTime {
+            display: block; /* Display each on a new line */
+        }
+
+        #currentDate {
+            font-weight: bold;
+        }
+
+        #currentTime {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            margin: 5% auto;
+            padding: 20px;
+            background-color: #fefefe;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="schedule-header">
+    JADUAL BERTUGAS STAFF RESIDEN KOLEJ
+    <!-- Home Button -->
+   <!-- <a href="menu.php" class="home-button">Home</a> -->
+</div>
+
+<div class="datetime-container">
+    <span id="currentDate"></span>
+    <span id="currentTime"></span>
+</div>
+
+<div class="schedule-container">
+    <div class="schedule-image">
+        <img src="assets/srkbertugas.jpg" alt="Jadual Bertugas Staff Residen" id="imageToEnlarge">
+    </div>
+
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th>Nama SRK</th>
+                <th>Kolej Bertugas</th>
+                <th>Waktu Bertugas</th>
+                <th>Link WhatsApp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>EN. MOHD AZUAN BIN TUKIAR</td>
+                <td>DELIMA, INTAN & BAIDURI</td>
+                <td>5:00 PM - 8:00 AM</td>
+                <td><a id="profile-link-1" href="https://wa.me/60125149452" target="_blank">WhatsApp Me</a></td>
+            </tr>
+            <tr>
+                <td>EN. NOR NASIR BIN MD AMIN</td>
+                <td>KRISTAL A</td>
+                <td>5:00 PM - 8:00 AM</td>
+                <td><a id="profile-link-2" href="https://wa.me/60174499945" target="_blank">WhatsApp Me</a></td>
+            </tr>
+            <tr>
+                <td>EN. MUHAMMAD 'ARIF AIZAT BASHIR</td>
+                <td>KRISTAL B</td>
+                <td>5:00 PM - 8:00 AM</td>
+                <td><a id="profile-link-3" href="https://wa.me/60176707760" target="_blank">WhatsApp Me</a></td>
+            </tr>
+            <tr>
+                <td>EN. ZOLKIFLI BIN JAB</td>
+                <td>NILAM</td>
+                <td>5:00 PM - 8:00 AM</td>
+                <td><a id="profile-link-4" href="https://wa.me/60132342071" target="_blank">WhatsApp Me</a></td>
+            </tr>
+            <tr>
+                <td>TUAN YUZAINI RIDZUAN YUSOF</td>
+                <td>ZAMRUD</td>
+                <td>5:00 PM - 8:00 AM</td>
+                <td><a id="profile-link-5" href="https://wa.me/60129383305" target="_blank">WhatsApp Me</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Enlarged Image -->
+<div id="imageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <img id="modalImage" src="" alt="Enlarged Image">
+    </div>
+</div>
+
+<div class="schedule-footer">
+    <div class="footer-note">* Jadual ini tertakluk kepada perubahan</div>
+    <div class="contact-info">Sekiranya terdapat sebarang pertanyaan, sila hubungi: <br> En. Azuan Tukiar (012-5149452) KSRK</div>
+</div>
+
+<script>
+    function updateDateTime() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-MY', options);
+        const formattedTime = now.toLocaleTimeString('en-MY');
+
+        document.getElementById('currentDate').innerHTML = formattedDate;
+        document.getElementById('currentTime').innerHTML = formattedTime;
+    }
+
+    // Update time every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime(); // Initial call
+
+    // Modal functionality
+    var modal = document.getElementById("imageModal");
+    var modalImg = document.getElementById("modalImage");
+    var imageToEnlarge = document.getElementById("imageToEnlarge");
+    var closeBtn = document.getElementsByClassName("close-btn")[0];
+
+    imageToEnlarge.onclick = function() {
+        modal.style.display = "block";
+        modalImg.src = this.src;
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
